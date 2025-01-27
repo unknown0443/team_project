@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Videos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .video-container {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        .video {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .captions {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .caption-item {
+            margin-bottom: 10px;
+        }
+        .timestamp {
+            color: #555;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>YouTube Videos - 부산 여행</h1>
+    <div>
+        {% for item in videos_with_captions %}
+        <div class="video-container">
+            <!-- 동영상 -->
+            <div class="video">
+                <iframe 
+                    width="560" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/{{ item.video.video_id }}" 
+                    title="{{ item.video.title }}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- 자막 -->
+            <div class="captions">
+                <h3>Captions</h3>
+                {% for caption in item.captions %}
+                <div class="caption-item">
+                    <p class="timestamp">
+                        {{ caption.start_time }} - {{ caption.end_time }}
+                    </p>
+                    <p>{{ caption.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
