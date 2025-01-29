@@ -5,7 +5,7 @@ import re
 
 
 # YouTube API 설정
-API_KEY = 'api key'
+API_KEY = ''
 youtube = build('youtube', 'v3', developerKey=API_KEY)
 
 def search_videos_with_captions(query, max_results=5):
@@ -90,3 +90,40 @@ def parse_srt_captions(srt_data):
         })
 
     return parsed_captions        
+
+def download_captions(video_id):
+    """
+    YouTube 동영상에서 자막을 가져옵니다.
+    """
+    try:
+        video_url = f"https://www.youtube.com/watch?v={video_id}"
+        yt = YouTube(video_url)
+
+        # 가용한 자막 목록 확인
+        available_captions = yt.captions
+        print(f"Available captions: {available_captions}")
+
+        if not yt.captions:
+            print(f"❌ No captions available for video ID: {video_id}")
+            return None
+
+        # 자막을 우선적으로 가져올 언어 리스트 (영어, 한국어, 자동 생성 포함)
+        preferred_languages = ['ko', 'en', 'a.en']  # 한국어, 영어, 자동 생성 영어
+        caption = None
+
+        for lang in preferred_languages:
+            if lang in yt.captions:
+                caption = yt.captions[lang]
+                break
+
+        if caption:
+            srt_captions = caption.generate_srt_captions()
+            print(f"✅ Downloaded captions for {video_id}: {srt_captions[:100]}...")
+            return srt_captions
+        else:
+            print(f"❌ No preferred captions found for video ID: {video_id}")
+
+    except Exception as e:
+        print(f"⚠️ Error downloading captions: {e}")
+
+    return None  # 자막이 없으면 None 반환
