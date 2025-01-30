@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            width: 80%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .video-container {
+            flex: 2;
+        }
+        .captions-container {
+            flex: 1;
+            margin-left: 20px;
+            overflow-y: auto;
+            max-height: 315px;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .timestamp {
+            color: blue;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .timestamp:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        var players = {}; // ✅ YouTube 플레이어 객체 저장
+        var youtubeAPIReady = false; // ✅ API 로딩 완료 여부 플래그
+
+        function onYouTubeIframeAPIReady() {
+            youtubeAPIReady = true;  
+            console.log("✅ [YouTube API] IFrame API 로드 완료");
+
+            // ✅ 페이지가 로드되면 자동으로 모든 iframe 생성
+            document.querySelectorAll(".video-container").forEach(container => {
+                let videoId = container.getAttribute("data-video-id");
+                createPlayer(videoId);
+            });
+        }
+
+        function createPlayer(videoId) {
+            let container = document.querySelector(`[data-video-id='${videoId}']`);
+            if (!container) {
+                console.log(`❌ [YouTube] video-${videoId} 컨테이너를 찾을 수 없음`);
+                return;
+            }
+
+            // 기존 iframe이 있으면 제거
+            container.innerHTML = "";
+
+            // 새 iframe 생성
+            let iframe = document.createElement("iframe");
+            iframe.setAttribute("id", `player-${videoId}`);
+            iframe.setAttribute("width", "560");
+            iframe.setAttribute("height", "315");
+            iframe.setAttribute("src", `https://www.youtube.com/embed/${videoId}?enablejsapi=1`);
+            iframe.setAttribute("frameborder", "0");
+            iframe.setAttribute("allowfullscreen", "");
+
+            container.appendChild(iframe); // ✅ 동적으로 iframe 추가
+
+            // YT.Player로 등록
+            players[videoId] = new YT.Player(`player-${videoId}`, {
+                events: {
+                    'onReady': function(event) {
+                        console.log(`✅ [YouTube API] Player ready for video: ${videoId}`);
+                    }
+                }
+            });
+
+            console.log(`🎬 [YouTube] 새로운 플레이어 생성: ${videoId}`);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // ✅ 페이지가 로드되면 자동으로 모든 iframe 생성
+            document.querySelectorAll(".video-container").forEach(container => {
+                let videoId = container.getAttribute("data-video-id");
+                createPlayer(videoId);
+            });
+
+            document.querySelectorAll(".timestamp").forEach(ts => {
+                ts.addEventListener("click", function(event) {
+                    let videoId = event.target.dataset.video;
+                    let seconds = parseFloat(event.target.dataset.seconds);
+
+                    console.log(`🎯 [JavaScript] 클릭한 타임스탬프: videoId=${videoId}, seconds=${seconds}`);
+
+                    if (!players[videoId]) {
+                        console.log(`⚠️ [JavaScript] 플레이어가 존재하지 않음. 새로 생성.`);
+                        createPlayer(videoId);
+                        
+                        // 1초 후 다시 시도 (플레이어가 생성될 시간을 줌)
+                        setTimeout(() => {
+                            if (players[videoId]) {
+                                console.log(`✅ [JavaScript] 지연 후 seekTo 실행: ${seconds}초`);
+                                players[videoId].seekTo(seconds, true);
+                                players[videoId].playVideo();
+                            } else {
+                                console.log(`❌ [JavaScript] 여전히 seekTo() 실행 불가: videoId=${videoId}`);
+                            }
+                        }, 1000);
+                        return;
+                    }
+
+                    console.log(`🔹 [JavaScript] seekTo 실행: ${seconds}초로 이동`);
+                    players[videoId].seekTo(seconds, true);
+                    players[videoId].playVideo();
+                });
+            });
+        });
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script> 
+</head>
+<body>
+    <h1>🔍 "{{ query }}" 검색 결과</h1>
+    <!-- 🔍 검색 폼 -->
+    <div class="search-container">
+        <form method="GET" action="{% url 'search_videos' %}">
+            <input type="text" name="q" class="search-input" placeholder="검색어를 입력하세요..." value="{{ query }}" required>
+            <button type="submit" class="search-button">검색</button>
+        </form>
+    </div>
+
+    {% for result in search_results %}
+    <div class="container">
+        <!-- 동영상 영역 -->
+        <div class="video-container" data-video-id="{{ result.video_id }}"> <!-- ✅ ID 대신 data-video-id 사용 -->
+        </div>
+
+        <!-- 자막 영역 -->
+        <div class="captions-container">
+            {% if result.matches %}
+                <h3>자막</h3>
+                <ul>
+                    {% for match in result.matches %}
+                        <li>
+                            <a class="timestamp" data-video="{{ result.video_id }}" data-seconds="{{ match.seconds }}">
+                                {{ match.time }}
+                            </a> - {{ match.text }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>자막이 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+        <p>❌ 검색 결과가 없습니다.</p>
+    {% endfor %}
+</body>
+</html>

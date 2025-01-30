@@ -127,3 +127,10 @@ def download_captions(video_id):
         print(f"⚠️ Error downloading captions: {e}")
 
     return None  # 자막이 없으면 None 반환
+
+def format_timestamp(seconds):
+    """ 초 단위 시간을 hh:mm:ss 형식으로 변환 """
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
+    return f"{hours:02}:{minutes:02}:{seconds:02}"

@@ -21,9 +21,6 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .search-box {
-            margin-bottom: 20px;
-        }
         .video-container {
             flex: 2;
         }
@@ -106,15 +103,14 @@
 </head>
 <body>
     <h1>자막 포함 YouTube 동영상</h1>
-
-    <!-- 🔹 검색창 추가 -->
-    <form method="GET">
-        <div class="search-box">
-            <input type="text" name="q" placeholder="검색어를 입력하세요..." value="{{ query }}">
-            <button type="submit">검색</button>
-        </div>
-    </form>
-
+    <!-- 🔍 검색 폼 -->
+    <div class="search-container">
+        <form method="GET" action="{% url 'search_videos' %}">
+            <input type="text" name="q" class="search-input" placeholder="검색어를 입력하세요..." required>
+            <button type="submit" class="search-button">검색</button>
+        </form>
+    </div>
+    
     {% for video in videos %}
     <div class="container">
         <!-- 동영상 영역 -->
