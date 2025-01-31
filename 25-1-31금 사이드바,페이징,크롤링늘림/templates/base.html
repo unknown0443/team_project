@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}기본 제목{% endblock %}</title>
+
+    <!-- ✅ CSS 외부 파일 적용 -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- ✅ JavaScript 외부 파일 적용 -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="{% static 'js/youtube.js' %}" defer></script>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'video_list' %}">🎥 동영상 목록</a>
+        <a href="{% url 'search_videos' %}">🔍 검색 결과</a>
+    </div>
+
+    <div class="content-container">
+        <h1>{% block header %}📹 유튜브 동영상{% endblock %}</h1>
+
+        <!-- 🔍 검색 폼 -->
+        <div class="search-container">
+            <form method="GET" action="{% url 'search_videos' %}">
+                <input type="text" name="q" class="search-input" placeholder="검색어를 입력하세요..." value="{{ query|default:'' }}" required>
+                <button type="submit" class="search-button">검색</button>
+            </form>
+        </div>
+
+        <!-- ✅ 개별 페이지에서 콘텐츠를 채울 부분 -->
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- ✅ 페이지네이션 (공통) -->
+        {% if page_obj.has_other_pages %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page=1">처음</a>
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ page_obj.previous_page_number }}">이전</a>
+                {% endif %}
+
+                <span>페이지 {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ page_obj.next_page_number }}">다음</a>
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ page_obj.paginator.num_pages }}">마지막</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

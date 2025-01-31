@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}📹 유튜브 동영상 리스트{% endblock %}
+{% block header %}📹 전체 동영상 리스트{% endblock %}
+
+{% block content %}
+    {% for video in page_obj %}
+    <div class="container">
+        <!-- 동영상 영역 -->
+        <div class="video-container" data-video-id="{{ video.video_id }}"></div>
+
+        <!-- 자막 영역 -->
+        <div class="captions-container">
+            {% if video.captions %}
+                <h3>자막</h3>
+                <ul>
+                    {% for caption in video.captions %}
+                        <li>
+                            <a class="timestamp" data-video="{{ video.video_id }}" data-seconds="{{ caption.seconds }}">
+                                {{ caption.time }}
+                            </a> - {{ caption.text }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>자막이 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+        <p>❌ 동영상이 없습니다.</p>
+    {% endfor %}
+{% endblock %}
+s
