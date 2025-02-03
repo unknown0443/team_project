@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}📊 대시보드{% endblock %}
+
+{% block content %}
+<h1>📊 대시보드</h1>
+<div class="dashboard-container">
+    {% for video in top_videos %}
+    <div class="card">
+        <h2>{{ video.title }}</h2>
+        <p>조회수: {{ video.views }}</p>
+        <p>좋아요: {{ video.likes }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
