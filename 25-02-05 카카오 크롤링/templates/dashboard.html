@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- 🔹 CSS 스타일 적용 -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+
+<!-- 🔹 장소 검색창 -->
+<form method="GET" action="{% url 'dashboard' %}" class="search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="장소 검색" class="search-input">
+    <button type="submit" class="search-button">검색</button>
+</form>
+
+<!-- 🔹 장소 목록 (부산 관광지, 맛집, 카페) -->
+<div class="dashboard-container">
+    <div class="dashboard-box">
+        <h2>📍 부산 인기 관광지</h2>
+        <ul>
+            {% for place in tourist_places %}
+            <li><a href="{{ place.link }}" target="_blank">{{ place.name }}</a> - {{ place.address }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="dashboard-box">
+        <h2>🍽️ 부산 맛집</h2>
+        <ul>
+            {% for place in restaurant_places %}
+            <li><a href="{{ place.link }}" target="_blank">{{ place.name }}</a> - {{ place.address }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="dashboard-box">
+        <h2>☕ 부산 카페</h2>
+        <ul>
+            {% for place in cafe_places %}
+            <li><a href="{{ place.link }}" target="_blank">{{ place.name }}</a> - {{ place.address }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- 🔹 시각화 그래프 (✅ 4개 칸 사용하여 크게 표시) -->
+<div class="visualization-container">
+    <div class="dashboard-box">
+        <h2>📊 카테고리별 장소 개수</h2>
+        <img src="{% static 'images/visualization_category.png' %}" alt="카테고리별 장소 개수 그래프">
+    </div>
+
+    <div class="dashboard-box">
+        <h2>⭐ 평점이 높은 TOP 10 장소</h2>
+        <img src="{% static 'images/visualization_top_rated.png' %}" alt="평점이 높은 TOP 10 그래프">
+    </div>
+
+    <div class="dashboard-box">
+        <h2>💬 리뷰 수가 많은 TOP 10 장소</h2>
+        <img src="{% static 'images/visualization_top_reviewed.png' %}" alt="리뷰 수가 많은 TOP 10 그래프">
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,6 @@
+{
+    "YOUTUBE_API_KEY": "AIzaSyBanWCrKdnWCvMBARQKDUF7AV5V8nHJtJM",
+    "NAVER_CLIENT_ID": "eOJG2vkgWDtC7Ze4WLf_",
+    "NAVER_CLIENT_SECRET": "UymGv76vC3",
+    "DATABASE_URL": "postgresql://myproject_user:secure_password@localhost:5432/myproject_db"
+}

@@ -1,0 +1,186 @@
+/* 📌 전체 페이지 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f4f4f4; /* 배경 색상 */
+    margin: 20px;
+}
+
+/* 📌 메인 컨테이너 스타일 */
+.container {
+    display: flex;
+    width: 95%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 유튜브 동영상 관련 컨테이너 스타일 */
+.video-container {
+    flex: 2;
+}
+
+/* 📌 자막 컨테이너 스타일 */
+.captions-container {
+    flex: 1;
+    margin-left: 10px;
+    overflow-y: auto;
+    max-height: 315px;
+    background: #f9f9f9;
+    padding: 0px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* 📌 타임스탬프 스타일 */
+.timestamp {
+    color: blue;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.timestamp:hover {
+    text-decoration: underline;
+}
+
+/* 📌 사이드바 스타일 */
+.sidebar {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #333;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 📌 사이드바 내부 링크 스타일 */
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+/* 📌 본문 컨테이너 (사이드바 옆 공간) */
+.content-container {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+/* 📌 대시보드 전체 컨테이너 (유동적 레이아웃) */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* ✅ 반응형 조정 */
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    justify-content: center;
+}
+
+/* 📌 대시보드 박스 스타일 */
+.dashboard-box {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 400px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* 📌 대시보드 제목 스타일 */
+.dashboard-box h2 {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* 📌 대시보드 리스트 스타일 */
+.dashboard-box ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* 📌 리스트 아이템 스타일 */
+.dashboard-box ul li {
+    margin-bottom: 10px;
+}
+
+/* 📌 리스트 내부 링크 스타일 */
+.dashboard-box ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.dashboard-box ul li a:hover {
+    color: #ff4500;
+}
+
+/* 📌 장소 검색창 스타일 */
+.search-form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 📌 검색 입력 필드 스타일 */
+.search-input {
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* 📌 검색 버튼 스타일 */
+.search-button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 그래프 컨테이너 (✅ 4개 칸 사용하여 크게 표시) */
+.visualization-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(500px, 1fr)); /* ✅ 2열 구성 */
+    gap: 20px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 20px;
+    justify-content: center;
+}
+/* 📌 그래프 이미지 크기 조정 */
+.visualization-container .dashboard-box {
+    grid-column: span 2; /* ✅ 각 그래프를 2칸 차지하도록 설정 */
+    width: 100%;
+    max-width: 700px; /* ✅ 그래프 크기 증가 */
+}
+
+.dashboard-box img {
+    width: 100%;
+    max-width: 700px; /* ✅ 더 큰 이미지 적용 */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

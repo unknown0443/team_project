@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}🔍 검색 결과{% endblock %}
+{% block header %}🔍 "{{ query }}" 검색 결과{% endblock %}
+
+{% block content %}
+    {% for result in page_obj %}
+    <div class="container">
+        <div class="video-container" data-video-id="{{ result.video_id }}"></div>
+        <div class="captions-container">
+            {% if result.matches %}
+                <h3>자막</h3>
+                <ul>
+                    {% for match in result.matches %}
+                        <li>
+                            <a class="timestamp" data-video="{{ result.video_id }}" data-seconds="{{ match.seconds }}">
+                                {{ match.time }}
+                            </a> - {{ match.text }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>자막이 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+        <p>❌ 검색 결과가 없습니다.</p>
+    {% endfor %}
+{% endblock %}
